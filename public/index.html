@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b1d">
+<title>TikSave Pro</title>
+<meta name="description" content="TikSave Pro: xem trước video TikTok và tải về khi bạn có quyền với nội dung đó.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <span class="orb orb-a"></span>
+  <span class="orb orb-b"></span>
+  <span class="orb orb-c"></span>
+  <span class="grid"></span>
+</div>
+
+<header class="topbar">
+  <div class="wrap topbar-in glass">
+    <a class="brand" href="#home" aria-label="TikSave Pro, trang chủ">
+      <span class="brand-mark"><i data-lucide="arrow-down-to-line"></i></span>
+      <span class="brand-name">TikSave <b>Pro</b></span>
+    </a>
+    <nav class="nav" aria-label="Điều hướng chính">
+      <a href="#home" data-nav="home"><i data-lucide="house"></i><span>Trang chủ</span></a>
+      <a href="#history" data-nav="history"><i data-lucide="history"></i><span>Lịch sử</span><em id="historyCount" hidden>0</em></a>
+      <a href="#settings" data-nav="settings"><i data-lucide="sliders-horizontal"></i><span>Cài đặt</span></a>
+    </nav>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Đổi giao diện sáng hoặc tối">
+      <i data-lucide="moon" class="ico-dark"></i><i data-lucide="sun" class="ico-light"></i>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HOME -->
+  <section class="view" id="view-home" data-view="home">
+    <div class="hero">
+      <p class="eyebrow"><span class="dot"></span> Phiên bản 3.0 · Premium</p>
+      <h1 class="hero-title" id="heroTitle">
+        <span class="line"><span class="w">Xem</span> <span class="w">trước</span> <span class="w">và</span></span>
+        <span class="line"><span class="w grad">tải</span> <span class="w grad">video</span> <span class="w">TikTok</span></span>
+      </h1>
+      <p class="hero-sub">Dán liên kết, kiểm tra thông tin video, rồi tải về khi nguồn cho phép. Lịch sử chỉ nằm trên thiết bị của bạn.</p>
+      <div class="rotator" aria-live="polite">
+        <i data-lucide="sparkles"></i>
+        <span id="rotator">Mobile first, mượt trên Android</span>
+      </div>
+    </div>
+
+    <form class="analyzer glass glow-border" id="analyzeForm" novalidate>
+      <label class="field-label" for="urlInput">Liên kết video TikTok</label>
+      <div class="input-row">
+        <div class="input-wrap">
+          <i data-lucide="link-2"></i>
+          <input id="urlInput" name="url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://www.tiktok.com/@tên/video/..." required>
+          <button type="button" class="chip-btn" id="pasteBtn"><i data-lucide="clipboard-paste"></i><span>Dán</span></button>
+        </div>
+        <button class="btn btn-primary" id="analyzeBtn" type="submit">
+          <span class="btn-label"><i data-lucide="scan-search"></i> Phân tích video</span>
+          <span class="btn-spin" hidden></span>
+        </button>
+      </div>
+      <label class="consent" for="ownerCheck">
+        <input type="checkbox" id="ownerCheck">
+        <span class="box"><i data-lucide="check"></i></span>
+        <span>Tôi là chủ sở hữu video này hoặc đã được chủ sở hữu cho phép tải về.</span>
+      </label>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+    </form>
+
+    <article class="result glass" id="result" hidden aria-live="polite">
+      <div class="result-media">
+        <div class="thumb" id="thumbBox">
+          <img id="thumbImg" alt="" referrerpolicy="no-referrer">
+          <span class="play"><i data-lucide="play"></i></span>
+        </div>
+      </div>
+      <div class="result-body">
+        <p class="eyebrow small"><i data-lucide="badge-check"></i> Đã tìm thấy video</p>
+        <h2 id="resTitle">Tiêu đề video</h2>
+        <dl class="meta">
+          <div><dt>Tác giả</dt><dd id="resAuthor">—</dd></div>
+          <div><dt>Nền tảng</dt><dd>TikTok</dd></div>
+          <div><dt>Mã video</dt><dd id="resId" class="mono">—</dd></div>
+        </dl>
+
+        <div class="dl-block">
+          <h3>Tải về</h3>
+          <div class="dl-list" id="dlList"></div>
+          <p class="dl-note" id="dlNote"></p>
+        </div>
+
+        <div class="result-actions">
+          <a class="btn btn-ghost" id="openOriginal" href="#" target="_blank" rel="noopener noreferrer"><i data-lucide="external-link"></i> Mở trên TikTok</a>
+          <button class="btn btn-ghost" id="copyLinkBtn" type="button"><i data-lucide="copy"></i> Sao chép liên kết</button>
+        </div>
+      </div>
+    </article>
+
+    <section class="features" aria-label="Tính năng">
+      <article class="feature glass">
+        <span class="f-ico"><i data-lucide="shield-check"></i></span>
+        <h3>Tải đúng nguồn</h3>
+        <p>Chỉ trả về liên kết tải khi nhà cung cấp hợp lệ hỗ trợ và bạn xác nhận quyền sử dụng.</p>
+      </article>
+      <article class="feature glass">
+        <span class="f-ico"><i data-lucide="eye"></i></span>
+        <h3>Xem trước rõ ràng</h3>
+        <p>Ảnh bìa, tiêu đề và tác giả hiện ra trước khi bạn quyết định tải.</p>
+      </article>
+      <article class="feature glass">
+        <span class="f-ico"><i data-lucide="layers"></i></span>
+        <h3>Chọn chất lượng</h3>
+        <p>1080p, 720p, 480p, tùy bản gốc có sẵn. Mục nào không có sẽ không hiện.</p>
+      </article>
+      <article class="feature glass">
+        <span class="f-ico"><i data-lucide="database"></i></span>
+        <h3>Lịch sử cục bộ</h3>
+        <p>Lưu bằng LocalStorage trên máy bạn. Xem lại hoặc xóa bất cứ lúc nào.</p>
+      </article>
+    </section>
+
+    <section class="how">
+      <h2>Cách dùng</h2>
+      <ol class="steps">
+        <li class="glass"><span class="n">1</span><div><h3>Sao chép liên kết</h3><p>Trong TikTok, chọn Chia sẻ rồi Sao chép liên kết.</p></div></li>
+        <li class="glass"><span class="n">2</span><div><h3>Dán và phân tích</h3><p>Dán vào ô phía trên, tích xác nhận quyền, nhấn Phân tích video.</p></div></li>
+        <li class="glass"><span class="n">3</span><div><h3>Chọn bản tải</h3><p>Chọn chất lượng mong muốn. Tệp được lưu vào thư mục Tải xuống.</p></div></li>
+      </ol>
+    </section>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="view" id="view-history" data-view="history" hidden>
+    <div class="page-head">
+      <div>
+        <p class="eyebrow small"><i data-lucide="history"></i> Lưu trên thiết bị này</p>
+        <h1 class="page-title">Lịch sử</h1>
+      </div>
+      <button class="btn btn-ghost danger" id="clearHistory" type="button"><i data-lucide="trash-2"></i> Xóa tất cả</button>
+    </div>
+    <div class="search glass">
+      <i data-lucide="search"></i>
+      <input id="historySearch" type="search" placeholder="Tìm theo tiêu đề hoặc tác giả" autocomplete="off">
+    </div>
+    <ul class="history" id="historyList"></ul>
+    <div class="empty glass" id="historyEmpty" hidden>
+      <span class="f-ico"><i data-lucide="inbox"></i></span>
+      <h3>Chưa có gì ở đây</h3>
+      <p>Video bạn phân tích sẽ xuất hiện trong danh sách này.</p>
+      <a class="btn btn-primary" href="#home">Phân tích video đầu tiên</a>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="view-settings" data-view="settings" hidden>
+    <div class="page-head">
+      <div>
+        <p class="eyebrow small"><i data-lucide="sliders-horizontal"></i> Tùy chỉnh</p>
+        <h1 class="page-title">Cài đặt</h1>
+      </div>
+    </div>
+
+    <div class="settings glass">
+      <div class="set-row">
+        <div><h3>Giao diện</h3><p>Chọn chế độ tối hoặc sáng.</p></div>
+        <div class="seg" id="themeSeg" role="group" aria-label="Chế độ giao diện">
+          <button type="button" data-theme-set="dark">Tối</button>
+          <button type="button" data-theme-set="light">Sáng</button>
+        </div>
+      </div>
+      <div class="set-row">
+        <div><h3>Lưu lịch sử</h3><p>Ghi nhớ các video đã phân tích trên thiết bị này.</p></div>
+        <label class="switch"><input type="checkbox" id="setHistory"><span></span></label>
+      </div>
+      <div class="set-row">
+        <div><h3>Tự dán từ bộ nhớ tạm</h3><p>Khi mở trang, tự điền liên kết TikTok nếu có trong clipboard.</p></div>
+        <label class="switch"><input type="checkbox" id="setAutoPaste"><span></span></label>
+      </div>
+      <div class="set-row">
+        <div><h3>Giảm chuyển động</h3><p>Tắt hiệu ứng động để tiết kiệm pin.</p></div>
+        <label class="switch"><input type="checkbox" id="setReduce"><span></span></label>
+      </div>
+      <div class="set-row col">
+        <div><h3>Địa chỉ máy chủ</h3><p>Để trống nếu website và backend cùng một địa chỉ. Khi đặt giao diện trên GitHub Pages, nhập địa chỉ backend, ví dụ https://tiksave-api.example.com</p></div>
+        <div class="api-row">
+          <input id="setApi" type="url" inputmode="url" placeholder="https://..." autocomplete="off" spellcheck="false">
+          <button class="btn btn-ghost" id="testApi" type="button"><i data-lucide="activity"></i> Kiểm tra</button>
+        </div>
+        <p class="api-status" id="apiStatus"></p>
+      </div>
+    </div>
+
+    <div class="legal glass">
+      <h3>Lưu ý bản quyền</h3>
+      <p>TikSave Pro chỉ dành cho nội dung của chính bạn hoặc nội dung bạn được phép tải. Công cụ không xóa dấu nhận diện nhằm che giấu nguồn gốc. Bạn chịu trách nhiệm với cách sử dụng tệp đã tải.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot wrap">
+  <p>© <span id="year"></span> TikSave Pro. Không liên kết với TikTok hay ByteDance.</p>
+  <p class="mono small">v3.0 · dữ liệu lưu trên thiết bị</p>
+</footer>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
